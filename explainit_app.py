@@ -2,7 +2,7 @@ import streamlit as st
 import explainit_lib as glib
 import json
 
-# --- Page Configuration ---
+
 st.set_page_config(
     page_title="ExplainIt",
     page_icon="⚡",
@@ -10,18 +10,18 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# --- Advanced Custom CSS ---
+
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
-    /* Global Reset & Font */
+    
     .stApp {
-        background-color: #0d1117; /* GitHub Dark Dimmed */
+        background-color: #0d1117; 
         font-family: 'Inter', sans-serif;
     }
     
-    /* Typography */
+    
     h1, h2, h3, h4, h5, h6 {
         color: #ffffff;
         font-weight: 700;
@@ -42,7 +42,7 @@ st.markdown("""
         line-height: 1.6;
     }
     
-    /* Cards & Containers */
+   
     .css-1r6slb0, .stExpander, div[data-testid="stExpander"] {
         background-color: #161b22;
         border: 1px solid #30363d;
@@ -55,7 +55,7 @@ st.markdown("""
         border-color: #58a6ff;
     }
     
-    /* Inputs */
+   
     .stTextArea textarea {
         background-color: #0d1117;
         color: #c9d1d9;
@@ -70,7 +70,7 @@ st.markdown("""
         box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.3);
     }
     
-    /* Buttons */
+    
     .stButton button {
         background-color: #238636;
         color: #ffffff;
@@ -94,7 +94,7 @@ st.markdown("""
         transform: scale(0.98);
     }
     
-    /* Metrics */
+    
     div[data-testid="stMetricValue"] {
         font-size: 1.8rem;
         font-weight: 700;
@@ -107,13 +107,13 @@ st.markdown("""
         font-weight: 500;
     }
     
-    /* Sidebar */
+    
     section[data-testid="stSidebar"] {
         background-color: #010409;
         border-right: 1px solid #30363d;
     }
     
-    /* Code Blocks */
+    
     code {
         font-family: 'JetBrains Mono', monospace;
         color: #ff7b72;
@@ -122,14 +122,14 @@ st.markdown("""
         border-radius: 6px;
     }
     
-    /* Progress Bar */
+   
     .stProgress > div > div > div > div {
         background-color: #238636;
     }
 </style>
 """, unsafe_allow_html=True)
 
-# --- Sidebar ---
+
 with st.sidebar:
     st.image("https://img.icons8.com/fluency/96/code-file.png", width=64)
     st.title("ExplainIt")
@@ -142,11 +142,11 @@ with st.sidebar:
     
     st.markdown("---")
 
-# --- Main Content ---
+
 st.title("ExplainIt")
 st.markdown("#### 🚀 Transform Code Changes into Human Insights")
 
-# Input Section
+
 st.markdown("### 📥 Input Source")
 input_col1, input_col2 = st.columns([2, 1], gap="large")
 
@@ -164,9 +164,9 @@ with input_col2:
     st.markdown("---")
     generate_btn = st.button("✨ Generate Analysis", type="primary")
 
-# Processing Logic
+
 if generate_btn:
-    # 1. Input Handler
+    
     final_input_text = ""
     input_type = "Unknown"
     
@@ -180,7 +180,7 @@ if generate_btn:
                 st.error(f"Error reading {uploaded_file.name}: {e}")
     elif input_text:
         final_input_text = input_text
-        # Detect type
+        
         if "diff --git" in input_text or "--- a/" in input_text or "+++ b/" in input_text:
             input_type = "Unified Diff"
         else:
@@ -189,36 +189,36 @@ if generate_btn:
         st.warning("⚠️ Please provide input via text or file upload.")
         st.stop()
 
-    # Progress Bar & Spinner
+    
     progress_text = "Analyzing code structure..."
     my_bar = st.progress(0, text=progress_text)
     
     try:
-        # 2. Repository & Diff Analysis Agent
+        
         my_bar.progress(20, text="Extracting change metadata...")
         analysis = glib.analyze_code(final_input_text, input_type)
         
-        # 3. Code Explanation Agent
+        
         my_bar.progress(40, text="Drafting human-friendly explanation...")
         explanation = glib.explain_code(final_input_text, analysis)
         
-        # 4. Commit Message Generator Agent
+       
         my_bar.progress(60, text="Generating commit message variations...")
         commits = glib.generate_commit_messages(final_input_text, analysis)
         
-        # 5. Unit Test Suggestor Agent
+        
         my_bar.progress(80, text="Brainstorming test scenarios...")
         tests = glib.suggest_tests(final_input_text, analysis)
         
-        # Confidence Score
+        
         confidence = glib.get_confidence_score(final_input_text)
         my_bar.progress(100, text="Analysis complete!")
         my_bar.empty()
 
-        # Output Display
+        
         st.markdown("---")
         
-        # Dashboard-style Metrics
+        
         st.subheader("📊 Analysis Overview")
         m1, m2, m3, m4 = st.columns(4)
         with m1:
@@ -232,7 +232,7 @@ if generate_btn:
             
         st.info(f"**Affected Components:** {', '.join(analysis.get('affected_components', []))}")
         
-        # Detailed Sections with Icons
+        
         st.markdown("### 📝 Detailed Insights")
         
         with st.expander("📖 **Change Explanation**", expanded=True):
@@ -248,7 +248,7 @@ if generate_btn:
             st.markdown("#### 🧪 Suggested Test Plan")
             st.markdown(tests)
             
-        # Confidence Footer
+       
         st.markdown("---")
         if confidence > 0.8:
             st.success(f"**AI Confidence Score:** {confidence:.2f} (High)")
