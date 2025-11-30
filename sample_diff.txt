@@ -1,0 +1,17 @@
+diff --git a/auth.py b/auth.py
+index 83c5a91..29a4c12 100644
+--- a/auth.py
++++ b/auth.py
+@@ -12,7 +12,12 @@ def login(username, password):
+     user = db.get_user(username)
+     if user and user.verify_password(password):
+         return True
+-    return False
++    return False
++
++def login_with_token(token):
++    if not token:
++        return False
++    if token_service.validate(token):
++        return True
++    return False
